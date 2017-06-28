@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Codewave_Session_Retrofit_MVP</string>
+    <string name="get">GET</string>
+    <string name="post1">POST</string>
+    <string name="post2">POST2</string>
+    <string name="image">ImgUp</string>
+</resources>
