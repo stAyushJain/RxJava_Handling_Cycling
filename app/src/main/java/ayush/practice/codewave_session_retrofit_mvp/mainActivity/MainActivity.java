@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        connectViewAndListeneres();
         height = (int) getResources().getDimension(R.dimen.button_height);
         width = (int) getResources().getDimension(R.dimen.button_width);
         radius = (int) getResources().getDimension(R.dimen.radius);
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        connectViewAndListeneres();
+
 
     }
 

@@ -39,6 +39,7 @@ public class MainPresenter implements MainContract.Presenter{
         this.context = context;
     }
 
+    @Override
     public void loadMyData()
     {
         Retrofit retrofit = new RetrofitInit("https://api.github.com/").getRetrofitInstance();

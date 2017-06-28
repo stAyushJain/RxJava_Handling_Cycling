@@ -12,6 +12,7 @@ public interface MainContract {
     }
 
     public interface Presenter {
+        public void loadMyData();
     }
 
 }
