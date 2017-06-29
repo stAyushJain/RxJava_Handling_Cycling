@@ -48,9 +48,9 @@ public class MainPresenter implements MainContract.Presenter{
     public void loadMyObserver(boolean useCache) {
 
         Map<String, String> mParams = new HashMap<>();
-        mParams.put("email","neha@codewave.in");
-        mParams.put("token","24548");
-        RetrofitInit retrofitInit = new RetrofitInit("https://www.stafftimes.com/app/");
+        mParams.put("email","***@******.in");
+        mParams.put("token","24548A00");
+        RetrofitInit retrofitInit = new RetrofitInit("https://www.**********.com/app/");
         Retrofit retrofit = retrofitInit.getRetrofitInstance();
         Observable<PostResponseModel> responseModelObservable = retrofit.create(RetrofitServices.class)
                 .getObserverTokenAuth("tokenVerification",mParams);
