@@ -3,13 +3,13 @@ package ayush.practice.codewave_session_retrofit_mvp.mainActivity;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.PersistableBundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.LruCache;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -24,13 +24,9 @@ import ayush.practice.codewave_session_retrofit_mvp.networking.RetrofitInit;
 import ayush.practice.codewave_session_retrofit_mvp.networking.RetrofitServices;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MainContract.View{
@@ -51,17 +47,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MainPresenter mPresenter;
     private Point[] buttonPoints;
     private Button[] buttons;
-
+    private boolean useCache;
     boolean checkForMethodOpenClick = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        connectViewAndListeneres();
+        useCache = true;
+
         height = (int) getResources().getDimension(R.dimen.button_height);
         width = (int) getResources().getDimension(R.dimen.button_width);
         radius = (int) getResources().getDimension(R.dimen.radius);
+        connectViewAndListeneres();
+        if(savedInstanceState!=null){
+            useCache = savedInstanceState.getBoolean("USE_CACHE");
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        if(useCache)
+//        mPresenter.loadMyObserver(true);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.rxUnSubscribe();
+
     }
 
     @Override
@@ -75,15 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
+        outState.putBoolean("USE_CACHE", true);
     }
 
     private void connectViewAndListeneres() {
@@ -97,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
 
         if(view.getId() == R.id.tvGo)
         {
@@ -137,6 +157,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case 2:
                     break;
                 case 3:
+                    mPresenter.loadMyObserver(true);
+                    break;
+                case 4:
                     break;
                 default:
                     Toast.makeText(this, "Not Implemented", Toast.LENGTH_SHORT).show();
@@ -306,64 +329,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void observer()
-    {
-        Map<String, String> paramsMap = new HashMap<String, String>();
-        paramsMap.put("email","neha@codewave.in");
-        paramsMap.put("token","24548");
-
-        Retrofit retrofit = new RetrofitInit("https://www.stafftimes.com/").getRetrofitInstance();
-         Observable<MainModel.PostModelResponse.PostResponseModel> observable = retrofit.create(RetrofitServices.class)
-                .getObserverTokenAuth("app/tokenVerification",paramsMap);
-
-        observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .unsubscribeOn(Schedulers.io())
-                .subscribe(new Observer<MainModel.PostModelResponse.PostResponseModel>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(MainModel.PostModelResponse.PostResponseModel value) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-    }
 
 
-    private LruCache<Class<?>, Observable<?>> apiObservables = new LruCache<>(10);
-    public Observable<?> getPreparedObservable(Observable<?> unPreparedObservable, Class<?> clazz, boolean cacheObservable, boolean useCache){
-        Observable<?> preparedObservable = null;
 
-        if(useCache) //this way we don't reset anything in the cache if this is the only instance of us not wanting to use it.
-            preparedObservable = apiObservables.get(clazz);
-
-        if(preparedObservable!=null)
-            return preparedObservable;
-
-        //we are here because we have never created this observable before or we didn't want to use the cache...
-
-        preparedObservable = unPreparedObservable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        if(cacheObservable){
-            preparedObservable = preparedObservable.cache();
-            apiObservables.put(clazz, preparedObservable);
-        }
-
-        return preparedObservable;
-    }
 }

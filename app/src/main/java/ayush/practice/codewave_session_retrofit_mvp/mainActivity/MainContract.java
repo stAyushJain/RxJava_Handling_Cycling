@@ -13,6 +13,8 @@ public interface MainContract {
 
     public interface Presenter {
         public void loadMyData();
+        public void loadMyObserver(boolean useCache);
+        public void rxUnSubscribe();
     }
 
 }

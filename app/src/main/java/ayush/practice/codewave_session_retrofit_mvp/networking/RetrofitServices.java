@@ -1,21 +1,17 @@
 package ayush.practice.codewave_session_retrofit_mvp.networking;
 
-import java.io.File;
 import java.util.Map;
 
-import ayush.practice.codewave_session_retrofit_mvp.mainActivity.MainModel;
+import ayush.practice.codewave_session_retrofit_mvp.mainActivity.GitHubResponseModel;
 import ayush.practice.codewave_session_retrofit_mvp.mainActivity.PostParamsModel;
+import ayush.practice.codewave_session_retrofit_mvp.mainActivity.PostResponseModel;
 import io.reactivex.Observable;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 
@@ -27,10 +23,10 @@ public interface RetrofitServices {
 
     //    https://api.github.com/users/caspyin
     @GET("users/{user}")
-    Call<MainModel.GetModelResponse.GitHubResponseModel> sendGetRequest(@Path("user") String user);
+    Call<GitHubResponseModel> sendGetRequest(@Path("user") String user);
 
     @GET
-    Call<MainModel.GetModelResponse.GitHubResponseModel> sendGetRequestWithURL(@Url String subUrl);
+    Call<GitHubResponseModel> sendGetRequestWithURL(@Url String subUrl);
 
 
 //    https://www.***************.***/app/tokenVerification
@@ -38,14 +34,14 @@ public interface RetrofitServices {
 
     @FormUrlEncoded
     @POST
-    Call<MainModel.PostModelResponse.PostResponseModel> getTokenAuth(@Url String subUrl, @FieldMap Map<String, String> params);
+    Call<PostResponseModel> getTokenAuth(@Url String subUrl, @FieldMap Map<String, String> params);
 
     @POST
-    Call<MainModel.PostModelResponse.PostResponseModel> getTokenAuthWithBody(@Url String subUrl, @Body PostParamsModel pojo);
+    Call<PostResponseModel> getTokenAuthWithBody(@Url String subUrl, @Body PostParamsModel pojo);
 
-
+    @FormUrlEncoded
     @POST
-    Observable<MainModel.PostModelResponse.PostResponseModel> getObserverTokenAuth(@Url String subUrl, @FieldMap Map<String, String> params);
+    Observable<PostResponseModel> getObserverTokenAuth(@Url String subUrl, @FieldMap Map<String, String> params);
 //    For Image Upload WithParams or WithOutParams
 //    Note : remove all @Part annotation apart from first to upload image without params
 
