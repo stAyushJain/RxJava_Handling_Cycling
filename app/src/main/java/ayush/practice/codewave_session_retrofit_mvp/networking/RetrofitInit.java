@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitInit {
 
 
-//    NOTE : On every call Im creating new Retrofit instance please make it in your project as singalton
+//    NOTE : On every call Im creating new Retrofit instance please make it in your project as singleton
 
     private String baseUrl;
     private static LruCache<Class<?>, Observable<?>> apiObservables;
